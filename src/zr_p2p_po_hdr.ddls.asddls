@@ -2,6 +2,7 @@
 @EndUserText.label: 'P2P PO Header'
 define root view entity ZR_P2P_PO_HDR
   as select from zp2p_po_hdr
+  composition [0..*] of ZR_P2P_PO_ITM as _Item
 {
   key po_uuid      as PoUuid,
       po_number    as PoNumber,
@@ -18,5 +19,6 @@ define root view entity ZR_P2P_PO_HDR
       @Semantics.systemDateTime.localInstanceLastChangedAt: true
       local_last_changed_at as LocalLastChangedAt,
       @Semantics.systemDateTime.lastChangedAt: true
-      last_changed_at       as LastChangedAt
+      last_changed_at       as LastChangedAt,
+      _Item
 }

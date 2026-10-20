@@ -6,7 +6,9 @@
 "ZP2P_PO_HDR"
 ],
 "ASSOCIATED":
-[],
+[
+"ZR_P2P_PO_ITM"
+],
 "BASE":
 [],
 "ANNO_REF":
