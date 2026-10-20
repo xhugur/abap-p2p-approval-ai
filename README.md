@@ -33,6 +33,10 @@ ABAP Cloud · RAP (managed, draft) · CDS · Fiori Elements · SAP BTP ABAP Envi
 
 ## Simplifications
 Standart MM/FI tabloları yerine sadeleştirilmiş tablolar kullanıldı (trial kısıtı).
+Standartta para birimi sadece EKKO’da durur. Amount alanları aynı tabloda bir currency alanına bağlı olmak zorunda olduğu için kalemde de currency tutuyoruz. Header’daki değeri determination ile kopyalayacağız.
+PEINH (price unit) yok, fiyat 1 birim için kabul edilir.
+Controlling area (KOKRS) yok, masraf yeri doğrudan company code’a bağlı.
+net_amount = quantity × unit_price, H2'de determination ile dolacak.
 
 ## Author
 Halil · SAP ABAP/Fiori Developer
