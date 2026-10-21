@@ -1,0 +1,85 @@
+managed implementation in class zbp_r_p2p_po_hdr unique;
+strict ( 2 );
+with draft;
+
+define behavior for ZR_P2P_PO_HDR alias PurchaseOrder
+persistent table zp2p_po_hdr
+draft table zp2p_po_hdr_d
+etag master LocalLastChangedAt
+lock master total etag LastChangedAt
+authorization master ( global )
+//etag master <field_name>
+{
+  create;
+  update;
+  delete;
+  field ( numbering : managed,readonly ) PoUuid;
+  field ( readonly ) PoNumber, TotalAmount, Status,
+                     CreatedBy, CreatedAt, LocalLastChangedAt, LastChangedAt;
+  field ( mandatory ) Supplier, CompanyCode, Currency;
+  association _Item { create; with draft; }
+
+  determination setInitialStatus on modify { create; }
+  validation validateCompanyCode on save { create; field CompanyCode;}
+
+  draft action Edit;
+  draft action Activate optimized;
+  draft action Discard;
+  draft action Resume;
+  draft determine action Prepare
+  {
+    validation validateCompanyCode;
+    validation PurchaseOrderItem~validateCostCenter;
+  }
+
+  mapping for zp2p_po_hdr
+  {
+    PoUuid             = po_uuid;
+    PoNumber           = po_number;
+    Supplier           = supplier;
+    CompanyCode        = company_code;
+    TotalAmount        = total_amount;
+    Currency           = currency;
+    Status             = status;
+    CreatedBy          = created_by;
+    CreatedAt          = created_at;
+    LocalLastChangedAt = local_last_changed_at;
+    LastChangedAt      = last_changed_at;
+  }
+}
+
+define behavior for ZR_P2P_PO_ITM alias PurchaseOrderItem
+persistent table zp2p_po_itm
+draft table zp2p_po_itm_d
+etag master LocalLastChangedAt
+lock dependent by _PurchaseOrder
+authorization dependent by _PurchaseOrder
+//etag master <field_name>
+{
+  update;
+  delete;
+  field (numbering : managed ,readonly ) ItemUuid;
+  field ( readonly ) PoUuid, NetAmount, LocalLastChangedAt;
+  field ( mandatory ) Description, Quantity, Unit, UnitPrice, CostCenter;
+
+  association _PurchaseOrder {with draft;}
+
+   determination calculateAmounts on modify { create; field Quantity, UnitPrice; }
+  validation validateCostCenter on save { create; field CostCenter; }
+
+  mapping for zp2p_po_itm
+  {
+    ItemUuid           = item_uuid;
+    PoUuid             = po_uuid;
+    ItemNo             = item_no;
+    Description        = description;
+    Quantity           = quantity;
+    Unit               = unit;
+    UnitPrice          = unit_price;
+    NetAmount          = net_amount;
+    Currency           = currency;
+    CostCenter         = cost_center;
+    InternalOrder      = internal_order;
+    LocalLastChangedAt = local_last_changed_at;
+  }
+}
