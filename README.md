@@ -37,6 +37,7 @@ Standartta para birimi sadece EKKO’da durur. Amount alanları aynı tabloda bi
 PEINH (price unit) yok, fiyat 1 birim için kabul edilir.
 Controlling area (KOKRS) yok, masraf yeri doğrudan company code’a bağlı.
 net_amount = quantity × unit_price, H2'de determination ile dolacak.
+ItemNo otomatik numbering için kullanılan MAX + 1 yöntemi demo içindir. Gerçek bir projede number range object kullanılır.
 
 ## Author
 Halil · SAP ABAP/Fiori Developer
