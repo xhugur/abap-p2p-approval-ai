@@ -13,14 +13,15 @@ authorization master ( global )
   create;
   update;
   delete;
-  field ( numbering : managed,readonly ) PoUuid;
+  field ( numbering : managed, readonly ) PoUuid;
   field ( readonly ) PoNumber, TotalAmount, Status,
-                     CreatedBy, CreatedAt, LocalLastChangedAt, LastChangedAt;
+  CreatedBy, CreatedAt, LocalLastChangedAt, LastChangedAt;
   field ( mandatory ) Supplier, CompanyCode, Currency;
   association _Item { create; with draft; }
 
   determination setInitialStatus on modify { create; }
-  validation validateCompanyCode on save { create; field CompanyCode;}
+  determination setPoNumber on save { create; }
+  validation validateCompanyCode on save { create; field CompanyCode; }
 
   draft action Edit;
   draft action Activate optimized;
@@ -32,20 +33,24 @@ authorization master ( global )
     validation PurchaseOrderItem~validateCostCenter;
   }
 
+  action submit result [1] $self;
+  action approve result [1] $self;
+  action reject result [1] $self;
+
   mapping for zp2p_po_hdr
-  {
-    PoUuid             = po_uuid;
-    PoNumber           = po_number;
-    Supplier           = supplier;
-    CompanyCode        = company_code;
-    TotalAmount        = total_amount;
-    Currency           = currency;
-    Status             = status;
-    CreatedBy          = created_by;
-    CreatedAt          = created_at;
-    LocalLastChangedAt = local_last_changed_at;
-    LastChangedAt      = last_changed_at;
-  }
+    {
+      PoUuid             = po_uuid;
+      PoNumber           = po_number;
+      Supplier           = supplier;
+      CompanyCode        = company_code;
+      TotalAmount        = total_amount;
+      Currency           = currency;
+      Status             = status;
+      CreatedBy          = created_by;
+      CreatedAt          = created_at;
+      LocalLastChangedAt = local_last_changed_at;
+      LastChangedAt      = last_changed_at;
+    }
 }
 
 define behavior for ZR_P2P_PO_ITM alias PurchaseOrderItem
@@ -58,28 +63,29 @@ authorization dependent by _PurchaseOrder
 {
   update;
   delete;
-  field (numbering : managed ,readonly ) ItemUuid;
-  field ( readonly ) PoUuid, NetAmount, LocalLastChangedAt;
+  field ( numbering : managed, readonly ) ItemUuid;
+  field ( readonly ) PoUuid, ItemNo, NetAmount, LocalLastChangedAt;
   field ( mandatory ) Description, Quantity, Unit, UnitPrice, CostCenter;
 
-  association _PurchaseOrder {with draft;}
+  association _PurchaseOrder { with draft; }
 
-   determination calculateAmounts on modify { create; field Quantity, UnitPrice; }
+  determination setItemNo on modify { create; }
+  determination calculateAmounts on modify { create; field Quantity, UnitPrice; }
   validation validateCostCenter on save { create; field CostCenter; }
 
   mapping for zp2p_po_itm
-  {
-    ItemUuid           = item_uuid;
-    PoUuid             = po_uuid;
-    ItemNo             = item_no;
-    Description        = description;
-    Quantity           = quantity;
-    Unit               = unit;
-    UnitPrice          = unit_price;
-    NetAmount          = net_amount;
-    Currency           = currency;
-    CostCenter         = cost_center;
-    InternalOrder      = internal_order;
-    LocalLastChangedAt = local_last_changed_at;
-  }
+    {
+      ItemUuid           = item_uuid;
+      PoUuid             = po_uuid;
+      ItemNo             = item_no;
+      Description        = description;
+      Quantity           = quantity;
+      Unit               = unit;
+      UnitPrice          = unit_price;
+      NetAmount          = net_amount;
+      Currency           = currency;
+      CostCenter         = cost_center;
+      InternalOrder      = internal_order;
+      LocalLastChangedAt = local_last_changed_at;
+    }
 }

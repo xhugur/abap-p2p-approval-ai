@@ -10,13 +10,13 @@ CLASS zcl_p2p_test_po IMPLEMENTATION.
         CREATE FIELDS ( Supplier CompanyCode Currency )
         WITH VALUE #( ( %cid = 'PO1' Supplier = 'SUP0000001'
                         CompanyCode = '1000' Currency = 'TRY' ) )
-        CREATE BY \_Item FIELDS ( ItemNo Description Quantity Unit UnitPrice CostCenter )
+        CREATE BY \_Item FIELDS ( Description Quantity Unit UnitPrice CostCenter )
         WITH VALUE #( ( %cid_ref = 'PO1'
-                        %target = VALUE #( ( %cid = 'IT1' ItemNo = '00010'
+                        %target = VALUE #( ( %cid = 'IT1'
                                              Description = 'Laptop'
                                              Quantity = 10 Unit = 'ST'
-                                             "UnitPrice = 1000 CostCenter = 'CC1001' ) ) ) )
-                                             UnitPrice = 1000 CostCenter = 'XXXX' ) ) ) )
+                                             UnitPrice = 1000 CostCenter = 'CC1001' ) ) ) )
+                                             "UnitPrice = 1000 CostCenter = 'XXXX' ) ) ) )
       MAPPED DATA(mapped) FAILED DATA(failed) REPORTED DATA(reported).
 
     COMMIT ENTITIES RESPONSE OF zr_p2p_po_hdr
