@@ -19,6 +19,8 @@ CLASS lhc_ZR_P2P_PO_HDR DEFINITION INHERITING FROM cl_abap_behavior_handler.
 
     METHODS submit FOR MODIFY
        keys FOR ACTION PurchaseOrder~submit RESULT result.
+    METHODS get_instance_features FOR INSTANCE FEATURES
+      keys REQUEST requested_features FOR PurchaseOrder RESULT result.
 
 ENDCLASS.
 
@@ -197,6 +199,29 @@ CLASS lhc_ZR_P2P_PO_HDR IMPLEMENTATION.
       ENTITY PurchaseOrder ALL FIELDS WITH CORRESPONDING #( keys )
       RESULT DATA(result_orders).
     result = VALUE #( FOR r IN result_orders ( %tky = r-%tky %param = r ) ).
+  ENDMETHOD.
+
+  METHOD get_instance_features.
+    READ ENTITIES OF zr_p2p_po_hdr IN LOCAL MODE
+    ENTITY PurchaseOrder FIELDS ( Status )
+    WITH CORRESPONDING #( keys )
+    RESULT DATA(orders).
+
+    result = VALUE #(
+        FOR o IN orders
+
+        LET editable = COND #( WHEN o-Status = 'N' OR o-Status = 'R'
+                             THEN if_abap_behv=>fc-o-enabled ELSE  if_abap_behv=>fc-o-disabled )
+            submitted = COND #(  WHEN o-Status = 'S'
+                              THEN if_abap_behv=>fc-o-disabled ELSE  if_abap_behv=>fc-o-disabled  )
+        IN ( %tky = o-%tky
+             %action-submit = editable
+             %action-approve = submitted
+             %action-reject = submitted
+             %action-Edit = editable
+             %delete = editable
+        )
+     ).
   ENDMETHOD.
 
 ENDCLASS.

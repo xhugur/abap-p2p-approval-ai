@@ -1,0 +1,58 @@
+@Metadata.layer: #CORE
+@UI.headerInfo : { typeName: 'Purchase Order',typeNamePlural: 'Purchase Orders',
+                   title: {
+                       type: #STANDARD,
+                       value: 'PoNumber'
+                   }                 }
+annotate entity ZC_P2P_PO_HDR with
+{
+  @UI.facet: [{
+      qualifier: '',
+      feature: '',
+      id: 'General',
+      purpose: #STANDARD,
+      parentId: '',
+      position:10 ,
+      exclude: true,
+      hidden: true,
+      isPartOfPreview: true,
+      isSummary: true,
+      isMap: true,
+      importance:#MEDIUM ,
+      label: 'General',
+      type: #IDENTIFICATION_REFERENCE
+  },{ id: 'Items', purpose: #STANDARD, type: #LINEITEM_REFERENCE,
+    label: 'Items', position: 20, targetElement: '_Item' } ]
+  @UI.hidden : true
+  PoUuid;
+
+  @UI: { lineItem: [ { position: 10 },
+                      { type: #FOR_ACTION, dataAction: 'submit',  label: 'Submit' },
+                      { type: #FOR_ACTION, dataAction: 'approve', label: 'Approve' },
+                      { type: #FOR_ACTION, dataAction: 'reject',  label: 'Reject' } ],
+          identification: [ { position: 10 },
+                      { type: #FOR_ACTION, dataAction: 'submit',  label: 'Submit' },
+                      { type: #FOR_ACTION, dataAction: 'approve', label: 'Approve' },
+                      { type: #FOR_ACTION, dataAction: 'reject',  label: 'Reject' } ],
+          selectionField: [ { position: 10 } ] }
+  PoNumber;
+
+  @UI: { lineItem: [ { position: 20 } ], identification: [ { position: 20 } ] }
+  Supplier;
+
+  @UI: { lineItem: [ { position: 30 } ], identification: [ { position: 30 } ],
+         selectionField: [ { position: 20 } ] }
+  CompanyCode;
+
+  @UI: { lineItem: [ { position: 40 } ], identification: [ { position: 40 } ] }
+  Currency;
+
+  @UI: { lineItem: [ { position: 50 } ], identification: [ { position: 50 } ] }
+  TotalAmount;
+
+  @UI: { lineItem: [ { position: 60 } ], identification: [ { position: 60 } ],
+         selectionField: [ { position: 30 } ] }
+  Status;
+
+
+}

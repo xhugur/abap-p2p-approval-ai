@@ -1,0 +1,5 @@
+@EndUserText.label: 'P2P Purchase Order Service'
+define service ZSD_P2P_PO {
+  expose ZC_P2P_PO_HDR as PurchaseOrder;
+  expose ZC_P2P_PO_ITM as PurchaseOrderItem;
+}
